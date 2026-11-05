@@ -124,9 +124,9 @@ public class CustomerLogin extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Customer Login Successful!");
         JOptionPane.showMessageDialog(this, customer.greeting());
         
-                CustomerHome home = new CustomerHome();
-                home.setVisible(true);
-                this.dispose();
+           CustomerHome home = new CustomerHome(customer);
+           home.setVisible(true);
+           this.dispose();
     } 
     else
     {

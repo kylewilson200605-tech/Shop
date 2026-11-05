@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package views;
-
+import models.Customer;
 /**
  *
  * @author 30554698
@@ -11,7 +11,7 @@ package views;
 public class CustomerHome extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CustomerHome.class.getName());
-
+    private Customer loggedInCustomer;
     /**
      * Creates new form CustomerHome
      */
@@ -19,6 +19,13 @@ public class CustomerHome extends javax.swing.JFrame {
         initComponents();
     }
 
+
+    
+    public CustomerHome(Customer customer) 
+    {
+    initComponents();
+    this.loggedInCustomer = customer;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -86,15 +93,15 @@ public class CustomerHome extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBrowseProductsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseProductsActionPerformed
-        ProductMenu menu = new ProductMenu();
-        menu.setVisible(true);
-        this.dispose();
+         ProductMenu shop = new ProductMenu(loggedInCustomer);
+         shop.setVisible(true);
+         this.dispose(); 
     }//GEN-LAST:event_btnBrowseProductsActionPerformed
 
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
-        MainMenu menu = new MainMenu();
-        menu.setVisible(true);
-        this.dispose();
+         MainMenu menu = new MainMenu();
+         menu.setVisible(true);
+         this.dispose(); 
     }//GEN-LAST:event_btnLogOutActionPerformed
 
     /**

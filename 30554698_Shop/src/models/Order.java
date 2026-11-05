@@ -73,6 +73,17 @@ public class Order
     {
     this.orderLines = orderLines;
     }
+    
+    public double calculateOrderTotal()
+    {
+    double total = 0;
+
+    for (OrderLine line : getOrderLines().values()) {
+        total += line.getLineTotal();
+    }
+    
+    return total;
+    }
 
     //Constructors
 

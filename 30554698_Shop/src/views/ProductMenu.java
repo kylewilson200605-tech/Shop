@@ -10,17 +10,22 @@ import javax.swing.DefaultListModel;
 import models.Order;
 import models.OrderLine;
 import java.util.Date;
+import models.Customer;
 /**
  *
  * @author 30554698
  */
 
 public class ProductMenu extends javax.swing.JFrame {
+    
     private ArrayList<Product> products;
     
     private ArrayList<Product> displayedProducts = new ArrayList<>();
+    
     private Order basketOrder =
     new Order(1, new Date(), 0.0, "Basket");
+    
+    private Customer loggedInCustomer;
 
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ProductMenu.class.getName());
@@ -38,6 +43,13 @@ public class ProductMenu extends javax.swing.JFrame {
     categoryModel.addElement("Heatpump");
 
     lstCategories.setModel(categoryModel);
+    }
+    
+    
+   public ProductMenu(Customer customer)
+   {
+    this();
+    this.loggedInCustomer = customer;
     }
 
     @SuppressWarnings("unchecked")
@@ -228,7 +240,7 @@ public class ProductMenu extends javax.swing.JFrame {
 
     private void btnViewBasketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewBasketActionPerformed
 
-         Basket basket = new Basket(basketOrder);
+         Basket basket = new Basket(basketOrder, loggedInCustomer);
          basket.setVisible(true);
          this.dispose();
 

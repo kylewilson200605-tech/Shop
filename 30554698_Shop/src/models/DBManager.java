@@ -14,6 +14,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class DBManager {
     
@@ -177,6 +179,31 @@ public class DBManager {
 
         return products;
         }
+        
+    public boolean saveOrder(String username, double orderTotal) {
+
+    String sql = "INSERT INTO Orders "
+            + "(Username, OrderTotal, OrderDate) "
+            + "VALUES (?, ?, ?)";
+
+    try (Connection conn = DriverManager.getConnection(
+            "jdbc:ucanaccess://Data/ShopDB.accdb");
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setString(1, username);
+        stmt.setDouble(2, orderTotal);
+        stmt.setDate(3, new java.sql.Date(
+                System.currentTimeMillis()));
+
+        stmt.executeUpdate();
+
+        return true;
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
 }
 
     
