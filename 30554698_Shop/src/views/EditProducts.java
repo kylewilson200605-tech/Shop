@@ -3,13 +3,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package views;
-
+import models.DBManager;
+import models.Product;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import java.util.ArrayList;
 /**
  *
  * @author 30554698
  */
 public class EditProducts extends javax.swing.JFrame {
-    
+    private ArrayList<Product> allProducts = new ArrayList<>();
+    private ArrayList<Product> displayedProducts = new ArrayList<>();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EditProducts.class.getName());
 
     /**
@@ -17,6 +22,12 @@ public class EditProducts extends javax.swing.JFrame {
      */
     public EditProducts() {
         initComponents();
+        
+        DBManager db = new DBManager();
+        allProducts = db.loadProducts();
+        
+        lstCategories.clearSelection();
+        lstProducts.setModel(new DefaultListModel<String>());
     }
 
     /**
@@ -46,6 +57,7 @@ public class EditProducts extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        lstCategories.addListSelectionListener(this::lstCategoriesValueChanged);
         jScrollPane1.setViewportView(lstCategories);
 
         jScrollPane2.setViewportView(lstProducts);
@@ -61,6 +73,7 @@ public class EditProducts extends javax.swing.JFrame {
         btnEditProduct.setText("Edit Product");
 
         btnDeleteProduct.setText("Delete Product");
+        btnDeleteProduct.addActionListener(this::btnDeleteProductActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -114,6 +127,79 @@ public class EditProducts extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnDeleteProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteProductActionPerformed
+     int selectedIndex = lstProducts.getSelectedIndex();
+
+    if (selectedIndex == -1) {
+        JOptionPane.showMessageDialog(
+                this, "Please select a product to delete.");
+        return;
+    }
+
+    Product selectedProduct = displayedProducts.get(selectedIndex);
+
+    int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Are you sure you want to delete this product?",
+            "Confirm Delete",
+            JOptionPane.YES_NO_OPTION);
+
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    DBManager db = new DBManager();
+
+    boolean deleted = db.deleteProduct(
+            selectedProduct.getProductID());
+
+    if (deleted) {
+
+        DefaultListModel<String> productsModel =
+                (DefaultListModel<String>) lstProducts.getModel();
+
+        productsModel.remove(selectedIndex);
+        displayedProducts.remove(selectedIndex);
+        allProducts.remove(selectedProduct);
+
+        JOptionPane.showMessageDialog(
+                this, "Product Deleted Successfully");
+
+    } else {
+
+        JOptionPane.showMessageDialog(
+                this, "Error deleting product");
+    }
+    }//GEN-LAST:event_btnDeleteProductActionPerformed
+
+    private void lstCategoriesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstCategoriesValueChanged
+        if (evt.getValueIsAdjusting()) 
+        {
+        return;
+        }
+
+        String selectedCategory = lstCategories.getSelectedValue();
+
+        DefaultListModel<String> productsModel =
+        new DefaultListModel<>();
+
+        displayedProducts.clear();
+
+        if (selectedCategory != null) {
+        for (Product product : allProducts) {
+
+        if (product.getClass().getSimpleName()
+                .equals(selectedCategory)) {
+
+        displayedProducts.add(product);
+        productsModel.addElement(product.toString());
+        }
+    }
+}
+
+lstProducts.setModel(productsModel);
+    }//GEN-LAST:event_lstCategoriesValueChanged
 
     /**
      * @param args the command line arguments

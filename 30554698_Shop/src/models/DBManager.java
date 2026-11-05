@@ -53,6 +53,29 @@ public class DBManager {
         
         return customers;
     }
+    
+    public boolean deleteProduct(int productId) {
+
+    String sql = "DELETE FROM Products WHERE ProductID = ?";
+
+    try (Connection conn = DriverManager.getConnection(
+                "jdbc:ucanaccess://Data/ShopDB.accdb");
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setInt(1, productId);
+
+        int rowsDeleted = stmt.executeUpdate();
+
+        return rowsDeleted > 0;
+
+    } catch (SQLException ex) {
+
+        System.out.println(
+                "Error deleting product: " + ex.getMessage());
+
+        return false;
+    }
+    }
 
     public ArrayList<Staff> loadStaff() {
     ArrayList<Staff> staff = new ArrayList<>();
